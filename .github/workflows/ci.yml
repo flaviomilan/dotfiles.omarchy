@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: Lint shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: ./scripts
+          severity: warning
+
+  validate-git-config:
+    name: Validate git config syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check git config files are parseable
+        run: |
+          for f in $(find . -name "*.local" -o -name "config" | grep -E "git/"); do
+            echo "Checking $f..."
+            git config --file "$f" --list > /dev/null && echo "  OK" || { echo "  FAIL"; exit 1; }
+          done
+
+  script-permissions:
+    name: Check script permissions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure all .sh files are executable
+        run: |
+          FAIL=0
+          while IFS= read -r -d '' f; do
+            if [[ ! -x "$f" ]]; then
+              echo "Not executable: $f"
+              FAIL=1
+            fi
+          done < <(find scripts/ -name "*.sh" -print0 2>/dev/null)
+          exit $FAIL
+
+  markdownlint:
+    name: Lint markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: "**/*.md"
