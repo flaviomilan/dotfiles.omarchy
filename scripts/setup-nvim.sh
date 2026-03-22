@@ -17,6 +17,7 @@ err()  { printf "\033[31m[nvim]\033[0m %s\n" "$1" >&2; }
 
 # Files to symlink: source path (relative to nvim/) → destination path (relative to ~/.config/nvim/)
 declare -A FILES=(
+  ["lua/config/lazy.lua"]="lua/config/lazy.lua"
   ["lua/config/options.lua"]="lua/config/options.lua"
   ["lua/config/keymaps.lua"]="lua/config/keymaps.lua"
   ["lua/config/autocmds.lua"]="lua/config/autocmds.lua"
