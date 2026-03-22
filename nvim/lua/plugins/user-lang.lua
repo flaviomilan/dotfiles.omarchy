@@ -15,12 +15,10 @@ return {
       output = { open_on_run = false },
       output_panel = { enabled = true, open = "botright split | resize 12" },
       adapters = {
-        -- Minitest: use `bin/rails test` when available, fallback to bundle exec
+        -- Minitest: bundle exec ruby -Itest (default, compatible with neotest-minitest's
+        -- dir runner which uses Ruby's -e flag, incompatible with `bin/rails test`)
         ["neotest-minitest"] = {
           test_cmd = function()
-            if vim.fn.filereadable("bin/rails") == 1 then
-              return { "bin/rails", "test" }
-            end
             return { "bundle", "exec", "ruby", "-Itest" }
           end,
         },
