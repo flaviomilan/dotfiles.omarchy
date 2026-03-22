@@ -8,7 +8,7 @@ Omarchy manages the base configuration. This repository layers personal preferen
 
 ## Structure
 
-```
+```text
 dotfiles.omarchy/
 ├── git/
 │   └── config.local      # Git aliases, GPG signing key, local overrides
@@ -27,6 +27,7 @@ Personal overrides live in `~/.config/git/config.local`, included at the end of 
 ```
 
 `config.local` contains:
+
 - GPG commit signing (`commit.gpgsign = true`)
 - Extra aliases (`ll`, `lg`, `wip`, `undo`, `amend`, `bclean`, etc.)
 
@@ -51,6 +52,7 @@ bash scripts/import-gpg.sh
 ```
 
 The script will:
+
 1. Sign in to 1Password CLI (`op`)
 2. Ask for the item name (default: `GPG Key - private`)
 3. Import the key into the local GPG keyring
