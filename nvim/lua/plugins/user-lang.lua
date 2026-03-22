@@ -15,7 +15,9 @@ return {
       adapters = {
         ["neotest-minitest"] = {
           test_cmd = function()
-            return { "bundle", "exec", "ruby", "-Itest" }
+            -- DISABLE_MINITEST_REPORTERS=1 reverts to standard minitest verbose output,
+            -- which neotest-minitest can parse. SpecReporter format breaks result detection.
+            return { "env", "DISABLE_MINITEST_REPORTERS=1", "bundle", "exec", "ruby", "-Itest" }
           end,
         },
         ["neotest-rspec"] = {
