@@ -22,6 +22,8 @@ require("lazy").setup({
     -- LazyVim extras (must come before user plugins)
     { import = "lazyvim.plugins.extras.ai.copilot" },
     { import = "lazyvim.plugins.extras.ai.copilot-chat" },
+
+    -- Languages
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.java" },
@@ -29,6 +31,22 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.rust" },
     { import = "lazyvim.plugins.extras.lang.go" },
     { import = "lazyvim.plugins.extras.lang.kotlin" },
+
+    -- Coding
+    { import = "lazyvim.plugins.extras.coding.mini-surround" }, -- ys/ds/cs surround
+
+    -- Editor
+    { import = "lazyvim.plugins.extras.editor.refactoring" },   -- extract fn, rename, etc.
+    { import = "lazyvim.plugins.extras.editor.inc-rename" },     -- live rename preview
+
+    -- Testing & Debugging
+    { import = "lazyvim.plugins.extras.test.core" },             -- neotest
+    { import = "lazyvim.plugins.extras.dap.core" },              -- nvim-dap debugger
+
+    -- UI
+    { import = "lazyvim.plugins.extras.ui.treesitter-context" }, -- fn/class context header
+    { import = "lazyvim.plugins.extras.ui.indent-blankline" },   -- indent guides
+    { import = "lazyvim.plugins.extras.ui.smear-cursor" },       -- smooth cursor
 
     -- User plugins (must be last)
     { import = "plugins" },
