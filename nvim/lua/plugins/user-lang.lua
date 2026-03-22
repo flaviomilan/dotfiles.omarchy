@@ -1,48 +1,24 @@
--- Language support via LazyVim extras + manual configs for languages without extras
-return {
-  { import = "lazyvim.plugins.extras.lang.python" },
-  { import = "lazyvim.plugins.extras.lang.typescript" },
-  { import = "lazyvim.plugins.extras.lang.java" },
-  { import = "lazyvim.plugins.extras.lang.ruby" },
-  { import = "lazyvim.plugins.extras.lang.rust" },
-  { import = "lazyvim.plugins.extras.lang.go" },
-  { import = "lazyvim.plugins.extras.lang.kotlin" },
+-- Most languages are configured via LazyVim extras in lua/config/lazy.lua
+-- This file contains only languages without an official LazyVim extra.
 
-  -- Bash: no LazyVim extra available — configure manually
+return {
+  -- Bash: no LazyVim extra available
   {
     "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        bashls = {},
-      },
-    },
+    opts = { servers = { bashls = {} } },
   },
   {
     "mason-org/mason.nvim",
     opts = {
-      ensure_installed = {
-        "bash-language-server",
-        "shfmt",
-        "shellcheck",
-      },
+      ensure_installed = { "bash-language-server", "shfmt", "shellcheck" },
     },
   },
   {
     "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        sh = { "shfmt" },
-        bash = { "shfmt" },
-      },
-    },
+    opts = { formatters_by_ft = { sh = { "shfmt" }, bash = { "shfmt" } } },
   },
   {
     "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        sh = { "shellcheck" },
-        bash = { "shellcheck" },
-      },
-    },
+    opts = { linters_by_ft = { sh = { "shellcheck" }, bash = { "shellcheck" } } },
   },
 }

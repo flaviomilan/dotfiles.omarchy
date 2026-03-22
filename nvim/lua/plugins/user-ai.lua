@@ -1,5 +1,3 @@
--- AI coding tools (via LazyVim official extras)
-return {
-  { import = "lazyvim.plugins.extras.ai.copilot" },
-  { import = "lazyvim.plugins.extras.ai.copilot-chat" },
-}
+-- AI plugins are configured via LazyVim extras in lua/config/lazy.lua
+-- (lazyvim.plugins.extras.ai.copilot + ai.copilot-chat)
+return {}
