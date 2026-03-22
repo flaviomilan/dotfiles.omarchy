@@ -1,41 +1,47 @@
--- Language support via LazyVim extras + manual configs
+-- Language support via LazyVim extras + manual configs for languages without extras
 return {
-  -- Python: pyright LSP, ruff linter/formatter, black
   { import = "lazyvim.plugins.extras.lang.python" },
-
-  -- TypeScript/JavaScript: ts_ls, prettier
   { import = "lazyvim.plugins.extras.lang.typescript" },
-
-  -- Java: jdtls
   { import = "lazyvim.plugins.extras.lang.java" },
-
-  -- Ruby: ruby-lsp, rubocop
   { import = "lazyvim.plugins.extras.lang.ruby" },
-
-  -- Rust: rust-analyzer, rustfmt
   { import = "lazyvim.plugins.extras.lang.rust" },
-
-  -- Go: gopls, goimports, gofmt
   { import = "lazyvim.plugins.extras.lang.go" },
+  { import = "lazyvim.plugins.extras.lang.kotlin" },
 
-  -- Bash: bash-language-server, shfmt, shellcheck
-  { import = "lazyvim.plugins.extras.lang.bash" },
-
-  -- Kotlin: no official LazyVim extra — configure manually
+  -- Bash: no LazyVim extra available — configure manually
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        kotlin_language_server = {},
+        bashls = {},
       },
     },
   },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
-        "kotlin-language-server",
-        "ktlint",
+        "bash-language-server",
+        "shfmt",
+        "shellcheck",
+      },
+    },
+  },
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        sh = { "shfmt" },
+        bash = { "shfmt" },
+      },
+    },
+  },
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        sh = { "shellcheck" },
+        bash = { "shellcheck" },
       },
     },
   },
