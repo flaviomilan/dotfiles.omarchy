@@ -19,3 +19,9 @@ jobs:
           release-type: simple
           token: ${{ secrets.GITHUB_TOKEN }}
           default-branch: main
+
+      - name: Enable auto-merge on release PR
+        if: ${{ steps.release.outputs.pr }}
+        run: gh pr merge --auto --squash "${{ steps.release.outputs.pr }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
