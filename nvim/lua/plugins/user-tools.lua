@@ -32,14 +32,16 @@ return {
   },
   {
     "tpope/vim-rails",
-    ft = { "ruby", "eruby", "haml", "slim" },
+    -- lazy=false ensures commands like :Emodel/:A are available immediately,
+    -- not only after opening a Ruby file for the first time
+    lazy = false,
     keys = {
-      { "<leader>ra", "<cmd>A<cr>",               desc = "Alternate file (test ↔ source)" },
-      { "<leader>rm", "<cmd>Emodel<cr>",           desc = "Edit model" },
-      { "<leader>rc", "<cmd>Econtroller<cr>",      desc = "Edit controller" },
-      { "<leader>rv", "<cmd>Eview<cr>",            desc = "Edit view" },
-      { "<leader>rs", "<cmd>Espec<cr>",            desc = "Edit spec" },
-      { "<leader>rr", "<cmd>Emigration<cr>",       desc = "Edit migration" },
+      { "<leader>ra", "<cmd>A<cr>",          desc = "Alternate file (test ↔ source)" },
+      { "<leader>rm", "<cmd>Emodel<cr>",     desc = "Edit model" },
+      { "<leader>rc", "<cmd>Econtroller<cr>", desc = "Edit controller" },
+      { "<leader>rv", "<cmd>Eview<cr>",      desc = "Edit view" },
+      { "<leader>rs", "<cmd>Espec<cr>",      desc = "Edit spec" },
+      { "<leader>rr", "<cmd>Emigration<cr>", desc = "Edit migration" },
     },
   },
   {
