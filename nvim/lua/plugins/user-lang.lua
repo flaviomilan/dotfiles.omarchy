@@ -2,18 +2,32 @@
 -- This file contains overrides and languages without an official LazyVim extra.
 
 return {
-  -- neotest-rspec: use `bundle exec rspec` so the project's Gemfile rspec is used
+  -- neotest: Ruby adapters + go guard
   {
     "nvim-neotest/neotest",
     optional = true,
+    dependencies = {
+      -- Minitest adapter (Rails default test framework)
+      "zidhuss/neotest-minitest",
+    },
     opts = {
       adapters = {
+        -- Minitest: use `bin/rails test` when available, fallback to bundle exec
+        ["neotest-minitest"] = {
+          test_cmd = function()
+            if vim.fn.filereadable("bin/rails") == 1 then
+              return { "bin/rails", "test" }
+            end
+            return { "bundle", "exec", "ruby", "-Itest" }
+          end,
+        },
+        -- RSpec: use bundle exec for projects that use RSpec
         ["neotest-rspec"] = {
           rspec_cmd = function()
             return { "bundle", "exec", "rspec" }
           end,
         },
-        -- Disable neotest-golang when `go` is not available in PATH
+        -- Disable neotest-golang when `go` is not in PATH
         ["neotest-golang"] = vim.fn.executable("go") == 1 and {} or false,
       },
     },
