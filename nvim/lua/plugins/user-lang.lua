@@ -11,6 +11,9 @@ return {
       "zidhuss/neotest-minitest",
     },
     opts = {
+      -- Output panel at the bottom instead of floating over the code
+      output = { open_on_run = false },
+      output_panel = { enabled = true, open = "botright split | resize 12" },
       adapters = {
         -- Minitest: use `bin/rails test` when available, fallback to bundle exec
         ["neotest-minitest"] = {
