@@ -1,8 +1,7 @@
 # Local git config — machine-specific settings
 # Managed manually, not by omarchy
 
-[user]
-	signingkey = 20460F5F8AA04E3E
+# user.signingkey is set by scripts/import-gpg.sh at setup time
 
 [commit]
 	gpgsign = true

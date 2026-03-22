@@ -44,10 +44,15 @@ echo -e '\n[include]\n\tpath = ~/.config/git/config.local' >> ~/.config/git/conf
 
 ## GPG Signing
 
-The signing key (`20460F5F8AA04E3E`) is stored in 1Password as **GPG Key - private**.
-Import with:
+The private key is stored in 1Password. Run the setup script to import it and configure git automatically:
 
 ```bash
-op item get "GPG Key - private" --fields notesPlain | gpg --import
-echo "967E4D02BBD9F0EB867F02FC20460F5F8AA04E3E:6:" | gpg --import-ownertrust
+bash scripts/import-gpg.sh
 ```
+
+The script will:
+1. Sign in to 1Password CLI (`op`)
+2. Ask for the item name (default: `GPG Key - private`)
+3. Import the key into the local GPG keyring
+4. Set ultimate trust
+5. Configure `user.signingkey` and `commit.gpgsign = true` in global git config
