@@ -25,7 +25,28 @@ return {
     },
   },
 
-  -- Octo: GitHub issues and PRs inside Neovim
+  -- Ruby on Rails
+  {
+    "tpope/vim-projectionist",
+    lazy = false,
+  },
+  {
+    "tpope/vim-rails",
+    ft = { "ruby", "eruby", "haml", "slim" },
+    keys = {
+      { "<leader>ra", "<cmd>A<cr>",               desc = "Alternate file (test ↔ source)" },
+      { "<leader>rm", "<cmd>Emodel<cr>",           desc = "Edit model" },
+      { "<leader>rc", "<cmd>Econtroller<cr>",      desc = "Edit controller" },
+      { "<leader>rv", "<cmd>Eview<cr>",            desc = "Edit view" },
+      { "<leader>rs", "<cmd>Espec<cr>",            desc = "Edit spec" },
+      { "<leader>rr", "<cmd>Emigration<cr>",       desc = "Edit migration" },
+    },
+  },
+  {
+    "tpope/vim-bundler",
+    lazy = false,
+  },
+
   {
     "pwntester/octo.nvim",
     dependencies = {
