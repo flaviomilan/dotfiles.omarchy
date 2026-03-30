@@ -76,7 +76,38 @@ if [ -f "$GIT_SRC" ]; then
 fi
 echo ""
 
-# ── 2. Neovim ───────────────────────────────────────────────────────
+# ── 2. Tmux ──────────────────────────────────────────────────────
+info "── Tmux Configuration ──"
+
+TMUX_SRC="$SCRIPT_DIR/tmux/tmux.conf"
+TMUX_DST="$HOME/.config/tmux/tmux.conf"
+
+if [ -f "$TMUX_SRC" ]; then
+  if [ -L "$TMUX_DST" ] && [ "$(readlink "$TMUX_DST")" = "$TMUX_SRC" ]; then
+    ok "Tmux config already linked"
+  elif confirm "Install unified tmux config with TPM?"; then
+    mkdir -p "$(dirname "$TMUX_DST")"
+    if [ -f "$TMUX_DST" ] && [ ! -L "$TMUX_DST" ]; then
+      backup="${TMUX_DST}.bak.$(date +%Y%m%d%H%M%S)"
+      warn "Backing up existing: tmux.conf → $(basename "$backup")"
+      cp "$TMUX_DST" "$backup"
+    fi
+    ln -sf "$TMUX_SRC" "$TMUX_DST"
+    ok "Linked tmux.conf → repo"
+
+    # TPM will auto-install on first tmux start, but install now if possible
+    if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+      info "Installing TPM..."
+      git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm" 2>/dev/null
+      ok "TPM installed — run prefix+I inside tmux to install plugins"
+    else
+      ok "TPM already installed"
+    fi
+  fi
+fi
+echo ""
+
+# ── 3. Neovim ───────────────────────────────────────────────────────
 info "── Neovim Configuration ──"
 
 if confirm "Setup Neovim personal plugins and config?"; then
@@ -84,7 +115,7 @@ if confirm "Setup Neovim personal plugins and config?"; then
 fi
 echo ""
 
-# ── 3. Bash overlay ─────────────────────────────────────────────────
+# ── 4. Bash overlay ─────────────────────────────────────────────────
 info "── Bash Configuration ──"
 
 BASH_SRC="$SCRIPT_DIR/bash/bashrc.local"
@@ -112,7 +143,7 @@ if [ -f "$BASH_SRC" ]; then
 fi
 echo ""
 
-# ── 4. GPG signing (optional) ───────────────────────────────────────
+# ── 5. GPG signing (optional) ───────────────────────────────────────
 info "── GPG Signing (optional) ──"
 
 if command -v op &> /dev/null && command -v gpg &> /dev/null; then

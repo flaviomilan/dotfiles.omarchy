@@ -31,6 +31,8 @@ dotfiles.omarchy/
 │           ├── user-lang.lua                  # Neotest adapters, Bash LSP
 │           ├── disable-news-alert.lua         # Disable LazyVim news popup
 │           └── snacks-animated-scrolling-off.lua  # Disable scroll animation
+├── tmux/
+│   └── tmux.conf             # Unified tmux config with TPM
 ├── scripts/
 │   ├── import-gpg.sh         # Import GPG key from 1Password
 │   └── setup-nvim.sh         # Symlink nvim configs into ~/.config/nvim/
@@ -48,9 +50,10 @@ cd ~/Work/projects/dotfiles.omarchy
 The installer will:
 
 1. **Git** — Copy `config.local` to `~/.config/git/` and add the `[include]` directive
-2. **Neovim** — Symlink personal plugins/config into `~/.config/nvim/`
-3. **Bash** — Source `bash/bashrc.local` directly from repo in `~/.bashrc`
-4. **GPG** — Optionally import signing key from 1Password
+2. **Tmux** — Symlink unified config with TPM, tokyo-night, resurrect, vim-tmux-navigator
+3. **Neovim** — Symlink personal plugins/config into `~/.config/nvim/`
+4. **Bash** — Source `bash/bashrc.local` directly from repo in `~/.bashrc`
+5. **GPG** — Optionally import signing key from 1Password
 
 Run with `--all` for non-interactive mode.
 
