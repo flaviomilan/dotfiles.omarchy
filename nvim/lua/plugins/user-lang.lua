@@ -7,7 +7,31 @@ return {
     "nvim-neotest/neotest",
     optional = true,
     dependencies = {
-      "zidhuss/neotest-minitest",
+      {
+        "zidhuss/neotest-minitest",
+        -- Patch build_spec here (during plugin config) rather than on LazyDone,
+        -- so lazy.nvim guarantees neotest-minitest is fully loaded before neotest's
+        -- own config runs — avoiding the circular-require loop that triggers when
+        -- the LazyDone event fires mid-load of a lazy neotest.
+        config = function()
+          local minitest = require("neotest-minitest")
+          local orig = minitest.build_spec
+          minitest.build_spec = function(args)
+            local spec = orig(args)
+            if spec then
+              local pos_path = args.tree:data().path
+              local search_dir = vim.fn.isdirectory(pos_path) == 1
+                and pos_path
+                or vim.fn.fnamemodify(pos_path, ":h")
+              local gemfile = vim.fn.findfile("Gemfile", search_dir .. ";")
+              if gemfile ~= "" then
+                spec.cwd = vim.fn.fnamemodify(gemfile, ":h")
+              end
+            end
+            return spec
+          end
+        end,
+      },
     },
     opts = {
       output = { open_on_run = false },

@@ -1,0 +1,19 @@
+# ~/.bashrc.local — Personal bash overlay for Omarchy
+# Sourced at the end of ~/.bashrc to add personal preferences
+# without conflicting with Omarchy defaults.
+#
+# Omarchy already provides: eza (ls), fzf (ff), zoxide (cd), git (g/gcm/gcam/gcad),
+# opencode (c), claude (cx), docker (d), rails (r), tmux (t), nvim (n),
+# mise, starship, and many more. This file only adds what's missing.
+
+# ── Development shortcuts ────────────────────────────────────────────
+alias be='bundle exec'
+alias dc='docker compose'
+
+# ── Useful functions ─────────────────────────────────────────────────
+mkcd() { mkdir -p "$1" && cd "$1"; }
+
+# ── Local overrides ──────────────────────────────────────────────────
+# Add machine-specific config below this line (not tracked by git).
+# Or create ~/.bashrc.extra for even more local overrides.
+[[ -f ~/.bashrc.extra ]] && source ~/.bashrc.extra
