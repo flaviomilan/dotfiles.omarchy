@@ -49,10 +49,12 @@ The installer will:
 
 1. **Git** — Copy `config.local` to `~/.config/git/` and add the `[include]` directive
 2. **Neovim** — Symlink personal plugins/config into `~/.config/nvim/`
-3. **Bash** — Install `~/.bashrc.local` and source it from `~/.bashrc`
+3. **Bash** — Source `bash/bashrc.local` directly from repo in `~/.bashrc`
 4. **GPG** — Optionally import signing key from 1Password
 
 Run with `--all` for non-interactive mode.
+
+> **After Omarchy updates** that reset `~/.bashrc`, re-run `./install.sh` to restore the source line.
 
 ## What's Included
 
@@ -110,8 +112,7 @@ cd ~/.config/nvim/lua
 find . -type l -lname '*/dotfiles.omarchy/*' -delete
 
 # Remove bash overlay
-rm ~/.bashrc.local
-# Edit ~/.bashrc to remove the source line for .bashrc.local
+# Edit ~/.bashrc to remove the source line for dotfiles.omarchy/bash/bashrc.local
 
 # Remove git overlay
 rm ~/.config/git/config.local

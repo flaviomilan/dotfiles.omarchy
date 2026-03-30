@@ -88,28 +88,26 @@ echo ""
 info "── Bash Configuration ──"
 
 BASH_SRC="$SCRIPT_DIR/bash/bashrc.local"
-BASH_DST="$HOME/.bashrc.local"
 BASHRC="$HOME/.bashrc"
+SOURCE_LINE="# Personal overlay (dotfiles.omarchy)"
+SOURCE_CMD="[ -f \"$BASH_SRC\" ] && source \"$BASH_SRC\""
 
 if [ -f "$BASH_SRC" ]; then
-  if [ -f "$BASH_DST" ] && diff -q "$BASH_SRC" "$BASH_DST" > /dev/null 2>&1; then
-    ok "Bash overlay already up to date"
-  elif confirm "Install personal bash overlay (aliases & functions)?"; then
-    if [ -f "$BASH_DST" ]; then
-      backup="${BASH_DST}.bak.$(date +%Y%m%d%H%M%S)"
-      warn "Backing up existing: .bashrc.local → $(basename "$backup")"
-      cp "$BASH_DST" "$backup"
+  if grep -qF "$BASH_SRC" "$BASHRC" 2>/dev/null; then
+    ok "Bash overlay already sourced from repo"
+  elif confirm "Add personal bash overlay (aliases & functions)?"; then
+    # Remove old copy-based approach if present
+    if [ -f "$HOME/.bashrc.local" ] && grep -q 'bashrc.local' "$BASHRC" 2>/dev/null; then
+      warn "Migrating from copy-based to direct-source approach"
+      # Remove old source line (points to ~/.bashrc.local copy)
+      sed -i '/bashrc\.local/d' "$BASHRC"
+      sed -i '/Personal overlay/d' "$BASHRC"
+      rm -f "$HOME/.bashrc.local"
+      ok "Removed old ~/.bashrc.local copy"
     fi
-    cp "$BASH_SRC" "$BASH_DST"
-    ok "Installed ~/.bashrc.local"
 
-    # Ensure .bashrc sources .bashrc.local
-    if ! grep -q 'bashrc.local' "$BASHRC" 2>/dev/null; then
-      printf '\n# Personal overlay (dotfiles.omarchy)\n[[ -f ~/.bashrc.local ]] && source ~/.bashrc.local\n' >> "$BASHRC"
-      ok "Added source line to ~/.bashrc"
-    else
-      ok "~/.bashrc already sources .bashrc.local"
-    fi
+    printf '\n%s\n%s\n' "$SOURCE_LINE" "$SOURCE_CMD" >> "$BASHRC"
+    ok "~/.bashrc now sources directly from repo: bash/bashrc.local"
   fi
 fi
 echo ""
@@ -138,3 +136,6 @@ info "Next steps:"
 info "  1. Open a new terminal to load bash changes"
 info "  2. Open Neovim and run :Lazy sync"
 info "  3. Verify: git aliases → git wip / git lg"
+info ""
+info "After Omarchy updates that reset ~/.bashrc, re-run:"
+info "  ./install.sh       (to restore the bash source line)"
