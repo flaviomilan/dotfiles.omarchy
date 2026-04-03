@@ -1,60 +1,127 @@
 # dotfiles.omarchy
 
-Personal dotfiles and configuration overrides for [Omarchy](https://github.com/basecamp/omarchy) — an opinionated Arch Linux environment.
+Personal dotfiles overlay for [Omarchy](https://github.com/basecamp/omarchy) — the omakase Arch Linux distribution by DHH.
 
 ## Philosophy
 
-Omarchy manages the base configuration. This repository layers personal preferences on top without touching what Omarchy owns, keeping updates safe and conflict-free.
+> Omarchy manages the base. This repo layers personal preferences on top — never replacing what Omarchy owns.
+
+**What Omarchy handles** (don't touch): terminal themes, Hyprland, Waybar, Walker, Starship prompt, shell defaults (eza, fzf, zoxide, etc.), and base Neovim/LazyVim setup.
+
+**What this repo adds**: git aliases, Neovim plugins for my workflow (Rails, AI, OSINT, Go), personal bash shortcuts, and GPG signing.
 
 ## Structure
 
 ```text
 dotfiles.omarchy/
+├── bash/
+│   └── bashrc.local          # Personal bash aliases & functions
 ├── git/
-│   └── config.local      # Git aliases, GPG signing key, local overrides
-│                         # included via [include] in ~/.config/git/config
-└── README.md
+│   └── config.local          # Git aliases, GPG signing, local overrides
+├── nvim/
+│   └── lua/
+│       ├── config/
+│       │   ├── lazy.lua      # LazyVim extras (languages, AI, tools)
+│       │   ├── keymaps.lua   # Custom keymaps (indent, select all)
+│       │   ├── options.lua   # Editor options (relative numbers, scroll)
+│       │   └── autocmds.lua  # Autocmds (LSP error suppression)
+│       └── plugins/
+│           ├── user-ai.lua                    # AI (Copilot via extras)
+│           ├── user-tools.lua                 # Oil, smart-splits, octo, Rails nav
+│           ├── user-lang.lua                  # Neotest adapters, Bash LSP
+│           ├── disable-news-alert.lua         # Disable LazyVim news popup
+│           └── snacks-animated-scrolling-off.lua  # Disable scroll animation
+├── tmux/
+│   └── tmux.conf             # Unified tmux config with TPM
+├── scripts/
+│   ├── import-gpg.sh         # Import GPG key from 1Password
+│   └── setup-nvim.sh         # Symlink nvim configs into ~/.config/nvim/
+└── install.sh                # One-command setup (idempotent)
 ```
 
-## Git
-
-Omarchy manages `~/.config/git/config` (user identity, base settings).
-Personal overrides live in `~/.config/git/config.local`, included at the end of omarchy's config:
-
-```ini
-[include]
-    path = ~/.config/git/config.local
-```
-
-`config.local` contains:
-
-- GPG commit signing (`commit.gpgsign = true`)
-- Extra aliases (`ll`, `lg`, `wip`, `undo`, `amend`, `bclean`, etc.)
-
-## Setup
+## Quick Start
 
 ```bash
 git clone git@github.com:flaviomilan/dotfiles.omarchy.git ~/Work/projects/dotfiles.omarchy
-
-# Git local overrides
-cp git/config.local ~/.config/git/config.local
-
-# Add include to omarchy's git config (if not already present)
-echo -e '\n[include]\n\tpath = ~/.config/git/config.local' >> ~/.config/git/config
+cd ~/Work/projects/dotfiles.omarchy
+./install.sh
 ```
 
-## GPG Signing
+The installer will:
 
-The private key is stored in 1Password. Run the setup script to import it and configure git automatically:
+1. **Git** — Copy `config.local` to `~/.config/git/` and add the `[include]` directive
+2. **Tmux** — Symlink unified config with TPM, tokyo-night, resurrect, vim-tmux-navigator
+3. **Neovim** — Symlink personal plugins/config into `~/.config/nvim/`
+4. **Bash** — Source `bash/bashrc.local` directly from repo in `~/.bashrc`
+5. **GPG** — Optionally import signing key from 1Password
+
+Run with `--all` for non-interactive mode.
+
+> **After Omarchy updates** that reset `~/.bashrc`, re-run `./install.sh` to restore the source line.
+
+## What's Included
+
+### Git Aliases
+
+Omarchy provides: `co`, `br`, `ci`, `st`, `pl`, `plr`. This overlay adds:
+
+| Alias | Command | Purpose |
+|-------|---------|---------|
+| `sw` | `switch` | Switch branches |
+| `undo` | `reset --soft HEAD~1` | Undo last commit (keep changes) |
+| `amend` | `commit --amend --no-edit` | Amend last commit |
+| `wip` | Add all + commit "wip [skip ci]" | Quick work-in-progress save |
+| `unwip` | Reset HEAD~1 if last was wip | Undo wip commit |
+| `lg` | `log --oneline --graph --all` | Visual branch graph |
+| `ll` | `log --oneline -20` | Quick recent history |
+| `bclean` | Delete merged branches | Branch cleanup |
+| `gone` | List branches with deleted remotes | Find stale branches |
+
+See `git/config.local` for the full list.
+
+### Neovim Plugins
+
+Built on top of Omarchy's LazyVim base:
+
+- **AI**: GitHub Copilot + Copilot Chat (via LazyVim extras)
+- **Navigation**: Oil.nvim (file browser), smart-splits (tmux-aware panes)
+- **Rails**: vim-rails, vim-projectionist, vim-bundler, neotest-minitest, neotest-rspec
+- **Go**: neotest-golang (auto-disabled if Go not in PATH)
+- **Tools**: octo.nvim (GitHub in Neovim), Bash LSP
+
+### Bash Overlay
+
+Minimal additions that complement Omarchy's defaults:
+
+- `be` — `bundle exec`
+- `dc` — `docker compose`
+- `mkcd` — Create directory and cd into it
+
+### GPG Signing
 
 ```bash
 bash scripts/import-gpg.sh
 ```
 
-The script will:
+Imports GPG private key from 1Password and configures git for signed commits.
 
-1. Sign in to 1Password CLI (`op`)
-2. Ask for the item name (default: `GPG Key - private`)
-3. Import the key into the local GPG keyring
-4. Set ultimate trust
-5. Configure `user.signingkey` and `commit.gpgsign = true` in global git config
+## Uninstall
+
+To restore stock Omarchy configs:
+
+```bash
+# Remove neovim symlinks (originals backed up as *.bak.*)
+cd ~/.config/nvim/lua
+find . -type l -lname '*/dotfiles.omarchy/*' -delete
+
+# Remove bash overlay
+# Edit ~/.bashrc to remove the source line for dotfiles.omarchy/bash/bashrc.local
+
+# Remove git overlay
+rm ~/.config/git/config.local
+# Edit ~/.config/git/config to remove the [include] section
+```
+
+## Related
+
+- **[dotfiles](https://github.com/flaviomilan/dotfiles)** — Full development environment for macOS (GNU Stow, installer, multi-platform)

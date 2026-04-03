@@ -24,6 +24,8 @@ declare -A FILES=(
   ["lua/plugins/user-ai.lua"]="lua/plugins/user-ai.lua"
   ["lua/plugins/user-tools.lua"]="lua/plugins/user-tools.lua"
   ["lua/plugins/user-lang.lua"]="lua/plugins/user-lang.lua"
+  ["lua/plugins/disable-news-alert.lua"]="lua/plugins/disable-news-alert.lua"
+  ["lua/plugins/snacks-animated-scrolling-off.lua"]="lua/plugins/snacks-animated-scrolling-off.lua"
 )
 
 if [ ! -d "$NVIM_DST" ]; then
